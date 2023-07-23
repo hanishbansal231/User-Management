@@ -17,3 +17,34 @@ exports.userRegister = async (req,res) => {
         })
     }
 }
+
+exports.login = async (req,res) => {
+    try{
+        const {email,password} = req.body;
+        const user = await User.findOne({email});
+        if(user){
+            if(password == user.password){
+                return res.status(200).json({
+                    success: true,
+                    message: "Successfully login..."
+                });
+            }else{
+                return res.status(402).json({
+                    success: false,
+                    message: 'Password Wrong...',
+                })
+            }
+        }else{
+            return res.status(401).json({
+                success: false,
+                message: 'User is not found this email...',
+            })
+        }
+    }catch(err){
+        console.error(err);
+        return res.status(500).json({
+            success: false,
+            message: 'Internal Error...',
+        })
+    }
+}
